@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>个人简历 - 李明</title>
+    <style>
+        :root {
+            --main-color: #e8f5e9; /* 淡绿色主色调 */
+            --accent-color: #81c784; /* 强调色 */
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(to right, #f1f8e9, #dcedc8);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px;
+            background: url('https://images.pexels.com/photos/30754133/pexels-photo-30754133.jpeg') center/cover;
+            border-radius: 15px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .profile {
+            background: rgba(232, 245, 233, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .profile:hover {
+            transform: scale(1.02);
+        }
+
+        .section {
+            padding: 25px;
+            margin: 20px 0;
+            background: var(--main-color);
+            border-left: 5px solid var(--accent-color);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* 音乐播放器样式 */
+        #music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 25px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 音乐播放器 -->
+    <audio id="music-player" controls>
+        <source src="music/background.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放
+    </audio>
+
+    <div class="container">
+        <header>
+            <div class="profile">
+                <h1>李明</h1>
+                <p>UI/UX 设计师 | 前端开发者</p>
+            </div>
+        </header>
+
+        <div class="grid">
+            <section class="section">
+                <h2>个人简介</h2>
+                <p>拥有5年经验的数字产品设计师，擅长响应式网页设计和用户体验优化...</p>
+            </section>
+
+            <section class="section">
+                <h2>教育背景</h2>
+                <p>XX大学 - 数字媒体艺术 (2015-2019)</p>
+                <p>主修课程：交互设计、网页设计、视觉传达</p>
+            </section>
+
+            <section class="section">
+                <h2>专业技能</h2>
+                <ul>
+                    <li>Adobe Creative Suite</li>
+                    <li>HTML5/CSS3/JavaScript</li>
+                    <li>React/Vue.js</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</body>
+</html> 
