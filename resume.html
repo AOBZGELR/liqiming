@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>个人简历 - 李明</title>
+    <title>个人简历 - 李启明</title>
     <style>
         :root {
             --main-color: #e8f5e9; /* 淡绿色主色调 */
@@ -11,12 +11,13 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(to right, #f1f8e9, #dcedc8);
+            background: url('https://images.pexels.com/photos/70365/forest-sunbeams-trees-sunlight-70365.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
             margin: 0;
             padding: 20px;
+            overflow-y: scroll; /* 强制显示垂直滚动条轨道 */
         }
 
-        .container {
+        .single-column-container {
             max-width: 1000px;
             margin: 0 auto;
             background-color: rgba(255, 255, 255, 0.9);
@@ -49,9 +50,10 @@
             padding: 25px;
             margin: 20px 0;
             background: var(--main-color);
-            border-left: 5px solid var(--accent-color);
             border-radius: 8px;
             transition: all 0.3s;
+            width: 90%;
+            margin: 30px auto;
         }
 
         .section:hover {
@@ -66,54 +68,1547 @@
             padding: 20px;
         }
 
-        /* 音乐播放器样式 */
+        /* 音乐播放器样式调整 */
         #music-player {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px;
+            background: rgba(76, 175, 80, 0.9);
+            padding: 8px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 40px;
+            height: 40px;
+            border: 2px solid #4CAF50;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        /* 悬停展开 */
+        #music-player:hover {
+            width: 180px;
+        }
+
+        /* 隐藏默认控件 */
+        #music-player audio {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* 自定义播放按钮 */
+        #custom-controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        #play-btn {
+            width: 24px;
+            height: 24px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>');
+            transition: 0.3s;
+        }
+
+        #music-player.playing #play-btn {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>');
+        }
+
+        /* 新增自然元素装饰 */
+        #music-player::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%234CAF50" d="M12 2C8 2 4 6 4 12s4 10 8 10 8-4 8-10-4-10-8-10zm0 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/><path fill="%234CAF50" d="M12 8l-3 6h6l-3-6z"/></svg>');
+            opacity: 0.8;
+        }
+
+        /* 对话精灵样式 */
+        .chat-sprite {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-sprite img {
+            border-radius: 0;
+            background: transparent;
+            width: 100px;
+            height: auto;
+        }
+
+        .chat-sprite:hover img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* 对话框样式 */
+        .dialog-box {
+            position: absolute;
+            right: 120px;
+            bottom: 50px;
+            width: 200px;
+            padding: 15px;
+            background: #fff3e6;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .dialog-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .dialog-arrow {
+            position: absolute;
+            right: -10px;
+            bottom: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-left: 15px solid #fff3e6;
+            border-bottom: 10px solid transparent;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 新增项目经历样式 */
+        .project-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .project-item {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .project-item h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .project-item .resource-links {
+            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        /* 新增时间线样式 */
+        .timeline {
+            position: relative;
+            padding-left: 25px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 12px;
+        }
+
+        .timeline-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .project-tag {
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        /* 优化列表样式 */
+        .advantage-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-list li {
+            position: relative;
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .project-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        /* 突出显示重点项目 */
+        .project-item.highlight {
+            border: 2px solid var(--accent-color);
+            transform: scale(1.02);
+        }
+
+        /* 优化列表布局 */
+        .project-detail {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+        }
+
+        .project-detail li {
+            padding: 15px;
+            background: var(--main-color);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .project-detail li::before {
+            content: "✔️";
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        /* 新增分层布局 */
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .timeline-header {
+            grid-column: 1 / -1;
+        }
+
+        .timeline-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 分栏效果 */
+        .grid-columns {
+            column-count: 2;
+            column-gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-columns {
+                column-count: 1;
+            }
+        }
+
+        /* UDL风格优化 */
+        .name {
+            font-size: 3.5rem;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .contact-bar {
+            display: flex;
+            gap: 1rem;
+            color: #888;
+            margin-top: 1rem;
+        }
+
+        .portfolio-nav {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 3rem;
+        }
+
+        .portfolio-nav a {
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .portfolio-nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            padding: 2rem;
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-description {
+            color: #666;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .project-tags span {
+            background: #f5f5f5;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .clients-section {
+            padding: 4rem 0;
+            border-top: 1px solid #eee;
+            margin-top: 4rem;
+        }
+
+        .client-logos {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            color: #888;
+            flex-wrap: wrap;
+        }
+
+        /* 单栏布局样式 */
+        .single-column-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(255,255,255,0.95);
+        }
+
+        /* 调整主内容区 */
+        header {
+            margin-left: 0;
+            text-align: center;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 优化导航栏 */
+        .portfolio-nav {
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        /* 调整项目展示 */
+        .project-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        /* 调整图片展示 */
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            background: var(--main-color);
+            border-radius: 15px;
+        }
+
+        /* 调整对话精灵位置 */
+        .chat-sprite {
+            right: 30px;
+            bottom: 30px;
+        }
+
+        /* 新增顶部导航栏 */
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: var(--main-color);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .top-nav a {
+            text-decoration: none;
+            color: var(--accent-color);
+            padding: 10px 20px;
             border-radius: 25px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .top-nav a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* 新增优势卡片布局 */
+        .advantage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .advantage-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 调整工作经历布局 */
+        .experience-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .experience-detail h4,
+        .experience-projects h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        /* 全宽作品展示栏 */
+        #gallery {
+            margin: 50px -30px;
+            width: calc(100% + 60px);
+        }
+
+        .full-width-title {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .full-width-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 15px auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 30px;
+        }
+
+        /* 新增顶部导航栏 */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 1.5rem 0;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* 优化个人优势栏 */
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .title-line {
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        /* 重构工作经历栏 */
+        .project-showcase {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+
+        .project-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        /* 全宽作品展示 */
+        .full-width {
+            margin: 4rem -2rem;
+            width: calc(100% + 4rem);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+        }
+
+        .project-info {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .project-info {
+            opacity: 1;
+        }
+
+        /* 专业能力卡片升级 */
+        .advantage-card {
+            border: 1px solid #eee;
+            transition: box-shadow 0.3s;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-list li {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            &:last-child { border-bottom: none; }
+        }
+
+        /* 品牌标识 */
+        .brand-header {
+            text-align: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .brand-slogan {
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* 工作室级导航 */
+        .studio-nav {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .studio-nav::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 80%;
+            height: 1px;
+            background: #eee;
+            transform: translateX(-50%);
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 0.5rem 0;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .nav-item::before {
+            content: attr(data-hover);
+            position: absolute;
+            top: -1.5em;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-item:hover::before {
+            opacity: 1;
+        }
+
+        /* 模块化设计 */
+        .module {
+            padding: 4rem 0;
+            border-bottom: 1px solid #eee;
+            margin: 0 auto 4rem;
+            max-width: 1200px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .module-number {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .module-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        /* 能力矩阵 */
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .capability-card {
+            padding: 2rem;
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+
+        .capability-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .expertise-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .expertise-list li::before {
+            content: attr(data-icon);
+            margin-right: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        /* 全出血项目展示 */
+        .full-bleed {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            padding: 4rem 0;
+            background: #fafafa;
+        }
+
+        .project-showcase {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            position: relative;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        .project-index {
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+            font-size: 3rem;
+            font-weight: 300;
+            color: #f0f0f0;
+            z-index: 0;
+        }
+
+        /* 视差基础设置 */
+        .parallax-container {
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            perspective: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .bg-layer {
+            transform: translateZ(-2px) scale(3);
+            background: linear-gradient(45deg, #f3f4f6 0%, #e5e7eb 100%);
+            z-index: -1;
+        }
+
+        .content-layer {
+            transform: translateZ(0);
+            padding-top: 80px;
+            position: relative;
+            z-index: 2;
+            background: white;
+            margin: 0 auto;
+            max-width: 1200px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+        }
+
+        /* 优化项目展示 */
+        .project-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            margin: 3rem 0;
+            transform: translateZ(0.5px);
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.98);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateZ(0.5px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) translateZ(0.5px);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .project-showcase {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .project-card {
+                margin: 0 1rem 2rem;
+            }
+        }
+
+        /* 新增滚动动画 */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.4s; }
+
+        /* 品牌标识系统 */
+        .branding {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .brand-title {
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .brand-line {
+            width: 60px;
+            height: 2px;
+            background: var(--accent-color);
+            margin: 1.5rem auto;
+        }
+
+        /* 工作室级导航 */
+        .studio-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-number {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-right: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .nav-text {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .nav-item:hover {
+            background: #f8f8f8;
+            transform: translateX(8px);
+        }
+
+        /* 模块化设计系统 */
+        .capability-module {
+            padding: 4rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 2.5rem;
+        }
+
+        .module-index {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-right: 1.5rem;
+        }
+
+        .module-title {
+            font-size: 2.4rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        /* 能力卡片系统 */
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .capability-card {
+            padding: 2rem;
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            opacity: 0.8;
+        }
+
+        .expertise-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.95rem;
+        }
+
+        .expertise-list li::before {
+            content: attr(data-icon);
+            color: var(--accent-color);
+            margin-right: 0.8rem;
+        }
+
+        /* 模块间距调整 */
+        .module {
+            padding: 4rem 0;
+            border-bottom: 1px solid #eee;
+            margin: 0 auto 4rem;
+            max-width: 1200px;
+        }
+
+        /* 增加模块间分隔 */
+        .module + .module {
+            margin-top: 6rem;
+            padding-top: 6rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* 卡片间距调整 */
+        .capability-card {
+            padding: 2rem;
+            border: 1px solid #eee;
+        }
+
+        /* 全局滚动条设置 */
+        ::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+
+        /* 新增模块容器 */
+        .module-container {
+            padding: 4rem 0;
+            background: white;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .module-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* 调整模块宽度 */
+        #portfolio {
+            max-width: 400px; /* 从1200px调整为800px */
+            margin: 0 auto 4rem;
+        }
+
+        /* 增加模块间距 */
+        #expertise + #portfolio {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* 调整项目卡片宽度 */
+        .project-card {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #portfolio {
+                max-width: 90%;
+                padding: 0 1rem;
+            }
+            
+            .project-card {
+                max-width: 100%;
+            }
+        }
+
+        /* 底部栏样式 */
+        .design-footer {
+            background: rgba(255,255,255,0.95);
+            padding: 40px 0;
+            margin-top: 80px;
+            border-top: 3px solid var(--accent-color);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        .video-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-gallery {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <!-- 音乐播放器 -->
-    <audio id="music-player" controls>
-        <source src="music/background.mp3" type="audio/mpeg">
-        您的浏览器不支持音频播放
-    </audio>
+    <div id="music-player">
+        <div id="custom-controls">
+            <div id="play-btn"></div>
+        </div>
+        <audio id="main-audio">
+            <source src="https://www.gequbao.com/uploads/music/2023/05/浮光.mp3" type="audio/mpeg">
+        </audio>
+    </div>
 
-    <div class="container">
-        <header>
-            <div class="profile">
-                <h1>李明</h1>
-                <p>UI/UX 设计师 | 前端开发者</p>
+    <div class="parallax-container">
+        <div class="single-column-container">
+            <!-- 新增品牌标识 -->
+            <header class="branding">
+                <h1 class="brand-title">李 启 明</h1>
+                <p class="brand-subtitle">Urban Design & Spatial Innovation</p>
+                <div class="brand-line"></div>
+            </header>
+
+            <!-- 重构导航系统 -->
+            <nav class="studio-nav">
+                <a href="#expertise" class="nav-item">
+                    <span class="nav-number">01</span>
+                    <span class="nav-text">设计能力</span>
+                </a>
+                <a href="#portfolio" class="nav-item">
+                    <span class="nav-number">02</span>
+                    <span class="nav-text">项目实践</span>
+                </a>
+            </nav>
+
+            <div class="grid">
+                <section id="expertise" class="module capability-module">
+                    <div class="module-header">
+                        <span class="module-index">01</span>
+                        <h2 class="module-title">Design Capability</h2>
+                    </div>
+                    <div class="capability-grid">
+                        <div class="capability-card">
+                            <div class="card-header">
+                                <div class="card-icon">⌘</div>
+                                <h3>核心技能</h3>
+                            </div>
+                            <ul class="expertise-list">
+                                <li data-icon="▸">城市规划设计</li>
+                                <li data-icon="▸">景观方案设计</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="portfolio" class="module full-bleed">
+                    <div class="module-header dark">
+                        <span class="module-number">02</span>
+                        <h2 class="module-title">Portfolio</h2>
+                    </div>
+                    <div class="project-showcase parallax-group">
+                        <article class="project-card parallax-layer" data-speed="0.1">
+                            <div class="project-index">01</div>
+                            <div class="project-meta">
+                                <time class="project-year">2023</time>
+                                <span class="project-type">市政规划</span>
+                            </div>
+                            <h3 class="project-title">栾城中心花园扩建</h3>
+                            <div class="project-content">
+                                <div class="project-detail">
+                                    <h4 class="detail-title">Design Highlight</h4>
+                                    <ul class="innovation-list">
+                                        <li>生态可持续设计</li>
+                                        <li>人流疏导方案优化</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="section" id="education">
+                    <h2>教育背景</h2>
+                    <div class="education-item">
+                        <h3>河北美术学院 · 环境艺术设计</h3>
+                        <p>2020 - 2022 | 本科</p>
+                        <ul class="education-honor">
+                            <li>🎖️ 学院艺术设计二等奖获得者</li>
+                            <li>👨🏫 曾任专业课程助教</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section" id="skills">
+                    <h2>专业技能</h2>
+                    <ul>
+                        <li>Adobe Creative Suite</li>
+                        <li>HTML5/CSS3/JavaScript</li>
+                        <li>React/Vue.js</li>
+                    </ul>
+                </section>
+               
+                <section class="section">
+                    <h2>荣誉奖项</h2>
+                    <ul>
+                        <li>Adobe Creative Suite</li>
+                        <li>HTML5/CSS3/JavaScript</li>
+                        <li>React/Vue.js</li>
+                    </ul>
+                </section>
+
+                <!-- 新增图片展示区 -->
+                <section class="section full-width" id="gallery">
+                    <div class="section-header dark-bg">
+                        <h2>设计成果展示</h2>
+                        <div class="title-line white"></div>
+                    </div>
+                    <div class="gallery-grid">
+                        <div class="gallery-item">
+                            <img src="path/to/project1.jpg" alt="哈尔滨住宅楼项目">
+                            <div class="project-info">
+                                <h4>滨海景观设计</h4>
+                                <p>2023年度优秀设计奖</p>
+                                <button class="detail-btn">查看案例</button>
+                            </div>
+                        </div>
+                        <!-- 其他作品项 -->
+                    </div>
+                </section>
+
+                <!-- 新增作品讲解栏 -->
+                <section class="presentation">
+                    <h2>作品讲解</h2>
+                    <div class="video-container">
+                        <iframe src="//player.bilibili.com/player.html?aid=932575121" 
+                                scrolling="no" 
+                                frameborder="no" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="resource-links">
+                        <a href="https://example.com/project1" target="_blank">
+                            <h3>项目一文档</h3>
+                            <p>详细设计说明及技术实现</p>
+                        </a>
+                        <a href="https://example.com/project2" target="_blank">
+                            <h3>交互原型</h3>
+                            <p>完整可交互原型演示</p>
+                        </a>
+                        <a href="https://example.com/code" target="_blank">
+                            <h3>GitHub仓库</h3>
+                            <p>查看项目源代码</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 新增作品讲解栏 -->
+                <section class="presentation">
+                    <h2>作品讲解</h2>
+                    <div class="video-container">
+                        <iframe src="//player.bilibili.com/player.html?aid=932575121" 
+                                scrolling="no" 
+                                frameborder="no" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="resource-links">
+                        <a href="https://example.com/project1" target="_blank">
+                            <h3>项目一文档</h3>
+                            <p>详细设计说明及技术实现</p>
+                        </a>
+                        <a href="https://example.com/project2" target="_blank">
+                            <h3>交互原型</h3>
+                            <p>完整可交互原型演示</p>
+                        </a>
+                        <a href="https://example.com/code" target="_blank">
+                            <h3>GitHub仓库</h3>
+                            <p>查看项目源代码</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 新增作品讲解栏 -->
+                <section class="presentation">
+                    <h2>作品讲解</h2>
+                    <div class="video-container">
+                        <iframe src="//player.bilibili.com/player.html?aid=932575121" 
+                                scrolling="no" 
+                                frameborder="no" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="resource-links">
+                        <a href="https://example.com/project1" target="_blank">
+                            <h3>项目一文档</h3>
+                            <p>详细设计说明及技术实现</p>
+                        </a>
+                        <a href="https://example.com/project2" target="_blank">
+                            <h3>交互原型</h3>
+                            <p>完整可交互原型演示</p>
+                        </a>
+                        <a href="https://example.com/code" target="_blank">
+                            <h3>GitHub仓库</h3>
+                            <p>查看项目源代码</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 新增项目经历 -->
+                <section class="section" id="projects">
+                    <h2 class="section-title">Selected Projects</h2>
+                    <div class="project-container">
+                        <div class="project-card">
+                            <div class="project-meta">
+                                <span class="project-year">2024</span>
+                                <span class="project-category">Urban Planning</span>
+                            </div>
+                            <h3>旅游中心规划</h3>
+                            <p class="project-description">Comprehensive tourism center planning including architectural layout and landscape design</p>
+                            <div class="project-tags">
+                                <span>Master Planning</span>
+                                <span>Landscape Design</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 新增客户展示区 -->
+                <section class="clients-section">
+                    <h3 class="clients-title">Collaborated With</h3>
+                    <div class="client-logos">
+                        <span>河北宏祥建筑工程</span>
+                        <span>重庆金沙河设计</span>
+                        <span>游客管理中心</span>
+                    </div>
+                </section>
             </div>
-        </header>
-
-        <div class="grid">
-            <section class="section">
-                <h2>个人简介</h2>
-                <p>拥有5年经验的数字产品设计师，擅长响应式网页设计和用户体验优化...</p>
-            </section>
-
-            <section class="section">
-                <h2>教育背景</h2>
-                <p>XX大学 - 数字媒体艺术 (2015-2019)</p>
-                <p>主修课程：交互设计、网页设计、视觉传达</p>
-            </section>
-
-            <section class="section">
-                <h2>专业技能</h2>
-                <ul>
-                    <li>Adobe Creative Suite</li>
-                    <li>HTML5/CSS3/JavaScript</li>
-                    <li>React/Vue.js</li>
-                </ul>
-            </section>
         </div>
     </div>
+    <div class="parallax-layer bg-layer"></div>
+    <div class="parallax-layer content-layer">
+        <!-- 主内容区 -->
+    </div>
+
+    <!-- 在body结束标签前添加以下内容 -->
+    <div class="chat-sprite" id="chatSprite">
+        <img src="https://gd-hbimg.huaban.com/7512d5aea606709a06f35c93905ba9ffd04d701b4a5ed-KQwknI_fw1200" 
+             id="spriteImage">
+        <div class="dialog-box" id="dialogBox">
+            <div class="dialog-content"></div>
+            <div class="dialog-arrow"></div>
+        </div>
+    </div>
+
+    <!-- 新增底部栏 -->
+    <footer class="design-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>设计资源</h4>
+                <ul class="resource-links">
+                    <li><a href="https://github.com/yourprofile" target="_blank">GitHub仓库</a></li>
+                    <li><a href="https://behance.net/yourprofile" target="_blank">Behance作品集</a></li>
+                    <li><a href="mailto:your@email.com">联系邮箱</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>设计过程</h4>
+                <div class="video-gallery">
+                    <div class="video-container">
+                        <iframe src="//player.bilibili.com/player.html?aid=12345678" 
+                                frameborder="0" 
+                                allowfullscreen></iframe>
+                    </div>
+                    <div class="video-container">
+                        <iframe src="//player.bilibili.com/player.html?aid=87654321" 
+                                frameborder="0" 
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 图片配置
+        const originalSprite = 'https://gd-hbimg.huaban.com/7512d5aea606709a06f35c93905ba9ffd04d701b4a5ed-KQwknI_fw1200';
+        const alternateSprite = 'https://gd-hbimg.huaban.com/af75c10d843619d1cc08bfc7489239f848ae11542acc22-rMLw9Y';
+        const thirdSprite = 'https://gd-hbimg.huaban.com/df9663979713f6c341a6dc24e3027b5a742a212e151a99-zoZN6c';
+        
+        // 不同状态下的对话内容
+        const greetings = {
+            original: [
+                "你好呀！需要帮忙吗？(✧ω✧)",
+                "今天也要加油哦~ (ง •_•)ง",
+                "点击这里可以找到我的联系方式！☆⌒(*＾-゜)v"
+            ],
+            alternate: [
+                "发现新造型啦！喜欢吗？(≧ω≦)",
+                "正在加载更多有趣内容... ( •̀ ω •́ )✧",
+                "三分钟后会有新变化啦~"
+            ],
+            third: [
+                "终极形态解锁！(ﾉ≧∀≦)ﾉ",
+                "这是最后的惊喜啦～",
+                "保持好奇心会有更多发现哦！"
+            ]
+        };
+        
+        // 添加独立的点击计数器
+        let clickCounter = 0;
+        let currentState = 'original';
+        let currentGreetingIndex = 0;
+
+        document.getElementById('chatSprite').addEventListener('click', function(e) {
+            const dialog = document.getElementById('dialogBox');
+            const content = dialog.querySelector('.dialog-content');
+            const spriteImg = document.getElementById('spriteImage'); // 确保获取图片元素
+            
+            // 获取当前状态对应的问候语
+            const currentGreetings = greetings[currentState];
+            const maxIndex = currentGreetings.length - 1;
+            
+            // 点击计数器逻辑
+            clickCounter++;
+            if(clickCounter >= 10) {
+                clickCounter = 0;
+                switch(currentState) {
+                    case 'original':
+                        spriteImg.src = alternateSprite;
+                        currentState = 'alternate';
+                        currentGreetingIndex = -1; // 重置为-1，点击后会变为0
+                        break;
+                    case 'alternate':
+                        spriteImg.src = thirdSprite;
+                        currentState = 'third';
+                        currentGreetingIndex = -1;
+                        break;
+                    case 'third':
+                        spriteImg.src = originalSprite;
+                        currentState = 'original';
+                        currentGreetingIndex = -1;
+                        break;
+                }
+            }
+
+            // 更新问候语索引
+            currentGreetingIndex = currentGreetingIndex < maxIndex ? currentGreetingIndex + 1 : 0;
+            
+            if(dialog.style.display === 'block') {
+                dialog.style.display = 'none';
+            } else {
+                content.innerHTML = currentGreetings[currentGreetingIndex];
+                dialog.style.display = 'block';
+                
+                // 点击外部关闭
+                setTimeout(() => {
+                    document.addEventListener('click', function closeDialog(event) {
+                        if(!event.target.closest('.chat-sprite')) {
+                            dialog.style.display = 'none';
+                            document.removeEventListener('click', closeDialog);
+                        }
+                    });
+                }, 10);
+            }
+
+            e.stopPropagation();
+        });
+
+        // 新增视差滚动效果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const layers = document.querySelectorAll('.parallax-layer');
+            
+            layers.forEach(layer => {
+                const speed = parseFloat(layer.dataset.speed) || 0.5;
+                const yPos = -(scrolled * speed);
+                layer.style.transform = `translate3d(0, ${yPos}px, 0)`;
+            });
+        });
+
+        // 交互动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // 新增音频可视化
+        const audio = document.getElementById('main-audio');
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaElementSource(audio);
+
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        analyser.fftSize = 256;
+
+        // 创建可视化canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 180;
+        canvas.height = 40;
+        document.getElementById('music-player').appendChild(canvas);
+
+        // 绘制音频波形
+        function draw() {
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制树叶状波形
+            dataArray.forEach((value, i) => {
+                ctx.fillStyle = `hsl(${value * 1.5}, 70%, 50%)`;
+                ctx.beginPath();
+                ctx.arc(
+                    i * 7, 
+                    canvas.height - value * 0.3, 
+                    value * 0.05, 
+                    0, 
+                    Math.PI * 2
+                );
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        audio.addEventListener('play', draw);
+
+        // 新增播放控制逻辑
+        const playBtn = document.getElementById('play-btn');
+        const musicPlayer = document.getElementById('music-player');
+
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+            isPlaying = !isPlaying;
+            musicPlayer.classList.toggle('playing', isPlaying);
+        });
+    </script>
 </body>
 </html> 
